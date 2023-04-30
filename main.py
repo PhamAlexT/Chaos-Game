@@ -2,7 +2,7 @@ import tkinter as tk
 from class_files.Board import Board
 from class_files.Point import Point
 import random as rd
-
+import time
 
 class Application(tk.Frame):
     def __init__(self, master=None):
@@ -24,14 +24,18 @@ class Application(tk.Frame):
                  text="Number of iterations: ",
                  bg="white").pack(side=tk.TOP, padx=10)
 
-        self.slider = tk.Scale(self.left_frame,
-                               from_=10, to=5000, orient=tk.HORIZONTAL,
-                               bg="white")
-        self.slider.pack(side=tk.TOP, padx=10)
+        self.slider_iter = tk.Scale(self.left_frame, from_=10, to=5000,
+                                    orient=tk.HORIZONTAL, bg="white")
+        self.slider_iter.pack(side=tk.TOP, padx=10)
 
-        self.textbox = tk.Text(self.left_frame, height=10, width=20)
-        #self.textbox.configure(state=tk.DISABLED)
-        self.textbox.pack(side=tk.TOP, padx=10, pady=10)
+        tk.Label(self.left_frame,
+                 text="Update delay: ",
+                 bg="white").pack(side=tk.TOP, padx=10)
+
+        self.slider_delay = tk.Scale(self.left_frame, from_=0, to=1,
+                                     resolution=0.1, orient=tk.HORIZONTAL,
+                                     bg="white")
+        self.slider_delay.pack(side=tk.TOP, padx=10)
 
         self.start_button = tk.Button(self.left_frame,
                                       text="Start the simulation",
@@ -43,21 +47,24 @@ class Application(tk.Frame):
                                       command=self.board.clear_board)
         self.clear_button.pack(side=tk.TOP, padx=10, pady=10)
 
+        self.msg_box = tk.Label(self.left_frame)
+        self.msg_box.pack(side=tk.TOP, padx=10)
+
     def start_simulation(self):
         if self.board.starting_triangle_ready():
             print("Ready")
-
-            for n in range(int(self.slider.get())):
+            for n in range(int(self.slider_iter.get())):
                 result = rd.randint(1, 6)
                 self.board.draw_point_from_throw(result)
-
-            print("Simulation done")
+                self.board.update()
+                time.sleep(self.slider_delay.get())
+                self.show_message(f"Iteration {n}: Got {result}")
+            self.show_message("Simulation done")
         else:
-            print("Not enough points")
+            self.show_message("Please add more points")
 
     def show_message(self, text: str):
-        self.textbox.delete(1.0, tk.END)
-        self.textbox.insert(tk.END, text)
+        self.msg_box.config(text=text)
 
 
 if __name__ == "__main__":
