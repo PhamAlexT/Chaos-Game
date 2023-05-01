@@ -29,11 +29,11 @@ class Application(tk.Frame):
         self.slider_iter.pack(side=tk.TOP, padx=10)
 
         tk.Label(self.left_frame,
-                 text="Update delay: ",
+                 text="Update delay: (second)",
                  bg="white").pack(side=tk.TOP, padx=10)
 
-        self.slider_delay = tk.Scale(self.left_frame, from_=0, to=1,
-                                     resolution=0.1, orient=tk.HORIZONTAL,
+        self.slider_delay = tk.Scale(self.left_frame, from_=0, to=0.1,
+                                     resolution=0.01, orient=tk.HORIZONTAL,
                                      bg="white")
         self.slider_delay.pack(side=tk.TOP, padx=10)
 
